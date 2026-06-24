@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantitative Valuation Engine</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>QuantEngine<span class="highlight">.</span></h1>
+        <p>Stochastic Monte Carlo & Reverse DCF Pipeline for SUN.NS</p>
+      </header>
+
+      <!-- Educational Context Panel -->
+      <section class="info-panel glass-panel">
+        <div class="info-grid">
+          <div class="info-box">
+            <h3>📊 What is this?</h3>
+            <p>This engine runs a <strong>Monte Carlo Simulation</strong>. Instead of guessing a single future, it runs thousands of probabilistic scenarios testing how variations in revenue and margins will impact Sun Pharma's true underlying value.</p>
+          </div>
+          <div class="info-box">
+            <h3>🔗 Where is the data from?</h3>
+            <p>The core structural inputs (Total Debt, Cash Equivalents, the 10.5% WACC discount rate, and Base Revenue) were automatically extracted from the live <strong>LSEG (Refinitiv) API</strong> utilizing a 5-year historical baseline.</p>
+          </div>
+          <div class="info-box">
+            <h3>🎯 How to read the output?</h3>
+            <p>The model outputs the <strong>Intrinsic Target Price</strong>. If our simulated Base Case price is lower than Sun Pharma's current market trading price (~₹1,868), the stock is mathematically considered <strong>Overvalued (SELL)</strong>.</p>
+          </div>
+        </div>
+      </section>
+
+      <main>
+        <aside class="control-panel glass-panel">
+          <h2>Dynamic Drivers</h2>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Adjust the macroeconomic levers below to instantly stress-test the simulation.</p>
+          
+          <div class="slider-group">
+            <label>Revenue Growth (Mean)</label>
+            <p class="slider-help">The expected average annual sales growth over the next 5 years.</p>
+            <div class="slider-val-container">
+              <input type="range" id="mean-growth" min="0" max="0.30" step="0.01" value="0.10">
+              <span id="mean-growth-val">10.0%</span>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <label>Growth Volatility (Std Dev)</label>
+            <p class="slider-help">How erratic the growth is. Higher % means wider, riskier bell curves.</p>
+            <div class="slider-val-container">
+              <input type="range" id="std-growth" min="0.01" max="0.10" step="0.01" value="0.02">
+              <span id="std-growth-val">2.0%</span>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <label>EBIT Margin (Mean)</label>
+            <p class="slider-help">The expected average operating profit margin.</p>
+            <div class="slider-val-container">
+              <input type="range" id="mean-margin" min="0.10" max="0.40" step="0.01" value="0.23">
+              <span id="mean-margin-val">23.0%</span>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <label>Margin Volatility (Std Dev)</label>
+            <p class="slider-help">Historical risk of profit margin compression or expansion.</p>
+            <div class="slider-val-container">
+              <input type="range" id="std-margin" min="0.005" max="0.05" step="0.005" value="0.015">
+              <span id="std-margin-val">1.5%</span>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <label>Iterations</label>
+            <p class="slider-help">Total number of simulated parallel universes to compute.</p>
+            <div class="slider-val-container">
+              <input type="range" id="simulations" min="1000" max="25000" step="1000" value="10000">
+              <span id="simulations-val">10,000</span>
+            </div>
+          </div>
+
+          <button id="run-sim" class="run-button">Run Simulation</button>
+        </aside>
+
+        <section class="results-panel">
+          <div class="kpi-row">
+            <div class="kpi-card glass-panel">
+              <span class="kpi-title">Bear Case (10th)</span>
+              <span class="kpi-value bear" id="kpi-bear">₹ --</span>
+              <p class="kpi-desc">90% chance value is higher</p>
+            </div>
+            <div class="kpi-card glass-panel">
+              <span class="kpi-title">Base Case (50th)</span>
+              <span class="kpi-value base" id="kpi-base">₹ --</span>
+              <p class="kpi-desc">Most probable target price</p>
+            </div>
+            <div class="kpi-card glass-panel">
+              <span class="kpi-title">Bull Case (90th)</span>
+              <span class="kpi-value bull" id="kpi-bull">₹ --</span>
+              <p class="kpi-desc">Only 10% chance to exceed</p>
+            </div>
+          </div>
+          
+          <div class="chart-container glass-panel">
+            <canvas id="monteCarloChart"></canvas>
+            <div class="loading-overlay" id="loading">Calculating 10,000 Scenarios...</div>
+          </div>
+        </section>
+      </main>
+
+      <!-- About Project Section -->
+      <section class="about-section glass-panel">
+        <div class="about-header">
+          <h2>About The Architecture</h2>
+          <p style="color: var(--text-secondary); margin-top: 0.5rem;">This application is the culmination of a 5-phase automated quantitative finance pipeline.</p>
+        </div>
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot">1</div>
+            <div class="timeline-content">
+              <h4>Automated LSEG Data Pipeline</h4>
+              <p>Built a robust Python extraction layer utilizing the Refinitiv Workspace API. It dynamically pulls 5-years of trailing historical financials, deduplicates the time-series data, and establishes the foundational metrics (Revenue, CapEx, D&A, Debt, Cash).</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">2</div>
+            <div class="timeline-content">
+              <h4>Base Case Forecasting & WACC</h4>
+              <p>Constructed a deterministic 5-year Free Cash Flow to Firm (FCFF) forecast. It mathematically computes the Weighted Average Cost of Capital (WACC) using dynamic risk-free rates and market risk premiums to discount future cash flows accurately.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">3</div>
+            <div class="timeline-content">
+              <h4>The Valuation Bridge (DCF)</h4>
+              <p>Implemented an institutional-grade Gordon Growth Model (GGM) to calculate the Terminal Value. It then bridges the Enterprise Value down to Equity Value by accounting for the exact net debt position to find the deterministic intrinsic share price.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">4</div>
+            <div class="timeline-content">
+              <h4>The Stochastic Monte Carlo Engine</h4>
+              <p>Upgraded the static DCF into a dynamic probabilistic model using NumPy and SciPy. By injecting standard deviations into core drivers and penalizing cash flows with Net Working Capital (NWC) drag, the model runs 10,000 parallel universes to find the true statistical center of mass.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">5</div>
+            <div class="timeline-content">
+              <h4>Full-Stack Web Integration</h4>
+              <p>Wrapped the entire Python algorithmic backend into a blazing fast FastAPI server, and surfaced it to the user via this responsive, glassmorphism-styled Vite frontend to allow for real-time stress-testing and portfolio presentation.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
