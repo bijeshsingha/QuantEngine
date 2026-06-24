@@ -7,6 +7,7 @@ const meanGrowth = document.getElementById('mean-growth');
 const stdGrowth = document.getElementById('std-growth');
 const meanMargin = document.getElementById('mean-margin');
 const stdMargin = document.getElementById('std-margin');
+const terminalGrowth = document.getElementById('terminal-growth');
 const simulations = document.getElementById('simulations');
 const runBtn = document.getElementById('run-sim');
 const loading = document.getElementById('loading');
@@ -23,7 +24,7 @@ const updateVal = (id, val, isPct = false) => {
 [
   [meanGrowth, true], [stdGrowth, true], 
   [meanMargin, true], [stdMargin, true], 
-  [simulations, false]
+  [terminalGrowth, true], [simulations, false]
 ].forEach(([el, isPct]) => {
   el.addEventListener('input', (e) => updateVal(e.target.id, e.target.value, isPct));
 });
@@ -79,6 +80,7 @@ const runSimulation = async () => {
         std_growth: parseFloat(stdGrowth.value),
         mean_margin: parseFloat(meanMargin.value),
         std_margin: parseFloat(stdMargin.value),
+        terminal_growth: parseFloat(terminalGrowth.value),
         simulations: parseInt(simulations.value)
       })
     });

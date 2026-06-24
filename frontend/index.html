@@ -74,6 +74,15 @@
           </div>
 
           <div class="slider-group">
+            <label>Terminal Growth Rate</label>
+            <p class="slider-help">Perpetual growth into infinity (typically 4% - 6% for India).</p>
+            <div class="slider-val-container">
+              <input type="range" id="terminal-growth" min="0.02" max="0.08" step="0.005" value="0.05">
+              <span id="terminal-growth-val">5.0%</span>
+            </div>
+          </div>
+
+          <div class="slider-group">
             <label>Iterations</label>
             <p class="slider-help">Total number of simulated parallel universes to compute.</p>
             <div class="slider-val-container">

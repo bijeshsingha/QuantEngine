@@ -39,7 +39,6 @@ shares_outstanding = market_cap / current_market_price
 net_debt = latest_debt - latest_cash
 
 tax_rate = 0.25
-terminal_growth = 0.05
 historical_capex_pct = 0.06
 historical_nwc_pct = 0.20
 forecast_years = 5
@@ -49,6 +48,7 @@ class MonteCarloParams(BaseModel):
     std_growth: float
     mean_margin: float
     std_margin: float
+    terminal_growth: float
     simulations: int = 10000
 
 @app.post("/api/monte-carlo")
@@ -78,7 +78,7 @@ def run_monte_carlo(params: MonteCarloParams):
             fcff = nopat + projected_da - projected_capex - nwc_investment
             pv_explicit_cf += fcff / ((1 + wacc) ** year)
             
-        terminal_value = (fcff * (1 + terminal_growth)) / (wacc - terminal_growth)
+        terminal_value = (fcff * (1 + params.terminal_growth)) / (wacc - params.terminal_growth)
         pv_terminal_value = terminal_value / ((1 + wacc) ** forecast_years)
         
         implied_ev = pv_explicit_cf + pv_terminal_value
