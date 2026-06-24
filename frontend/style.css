@@ -9,6 +9,24 @@
   --bear: #ef4444;
   --base: #10b981;
   --bull: #8b5cf6;
+  --bg-gradient-1: rgba(59, 130, 246, 0.08);
+  --bg-gradient-2: rgba(139, 92, 246, 0.08);
+  --chart-bg: rgba(59, 130, 246, 0.2);
+  --chart-grid: rgba(255, 255, 255, 0.05);
+}
+
+body.light-mode {
+  --bg-dark: #f8fafc;
+  --panel-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-color: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.3);
+  --bg-gradient-1: rgba(59, 130, 246, 0.1);
+  --bg-gradient-2: rgba(139, 92, 246, 0.1);
+  --chart-bg: rgba(37, 99, 235, 0.2);
+  --chart-grid: rgba(0, 0, 0, 0.05);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,10 +35,11 @@ body {
   font-family: 'Inter', sans-serif;
   background-color: var(--bg-dark);
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 15% 50%, var(--bg-gradient-1) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, var(--bg-gradient-2) 0%, transparent 50%);
   color: var(--text-primary);
   min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 #app {
@@ -110,7 +129,8 @@ main {
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .control-panel h2 {

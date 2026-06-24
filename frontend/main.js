@@ -11,6 +11,7 @@ const terminalGrowth = document.getElementById('terminal-growth');
 const simulations = document.getElementById('simulations');
 const runBtn = document.getElementById('run-sim');
 const loading = document.getElementById('loading');
+const themeToggle = document.getElementById('theme-toggle');
 
 const kpiBear = document.getElementById('kpi-bear');
 const kpiBase = document.getElementById('kpi-base');
@@ -62,10 +63,26 @@ let mcChart = new Chart(ctx, {
       }
     },
     scales: {
-      x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+      x: { 
+        grid: { color: getComputedStyle(document.body).getPropertyValue('--chart-grid') },
+        ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') }
+      },
       y: { display: false, grid: { display: false } }
     }
   }
+});
+
+// Theme Toggle Logic
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  themeToggle.innerText = isLight ? '🌙 Dark Mode' : '☀️ Light Mode';
+  
+  // Dynamically update Chart.js colors based on CSS variables
+  mcChart.options.scales.x.grid.color = getComputedStyle(document.body).getPropertyValue('--chart-grid');
+  mcChart.options.scales.x.ticks.color = getComputedStyle(document.body).getPropertyValue('--text-secondary');
+  mcChart.data.datasets[0].backgroundColor = getComputedStyle(document.body).getPropertyValue('--chart-bg');
+  mcChart.update();
 });
 
 // Fetch Data

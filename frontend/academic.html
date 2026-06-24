@@ -15,6 +15,7 @@
           <p>Academic & Financial Methodology</p>
         </div>
         <nav class="top-nav">
+          <button id="theme-toggle" class="nav-btn" style="cursor: pointer;">☀️ Light Mode</button>
           <a href="./index.html" class="nav-btn">← Back to Dashboard</a>
           <a href="/Methodology_Documentation.docx" class="nav-btn primary" download>📥 Download Full Report (.docx)</a>
         </nav>
@@ -56,6 +57,19 @@
 
         </section>
       </main>
+
+      <footer style="text-align: center; margin-top: 4rem; margin-bottom: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 0.95rem;">
+        Prepared by the QuantEngine Development Team | Valuation Pipeline &copy; 2026
+      </footer>
+
     </div>
+
+    <script>
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        themeToggle.innerText = document.body.classList.contains('light-mode') ? '🌙 Dark Mode' : '☀️ Light Mode';
+      });
+    </script>
   </body>
 </html>
