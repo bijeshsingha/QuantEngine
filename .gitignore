@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.env
+
+# Logs and Data
+*.log
+# We keep pharma_financials_wacc.xlsx because the API needs it to boot!
+
+# Frontend Node Modules
+frontend/node_modules/
+frontend/dist/
+frontend/.DS_Store
+
+# IDEs
+.vscode/
+.idea/
