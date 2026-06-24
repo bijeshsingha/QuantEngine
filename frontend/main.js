@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto';
 
-const API_URL = 'http://localhost:8000/api/monte-carlo';
+const API_URL = 'https://quantengine-7i5s.onrender.com/api/monte-carlo';
 
 // Elements
 const meanGrowth = document.getElementById('mean-growth');
